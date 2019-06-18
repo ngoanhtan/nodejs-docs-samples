@@ -27,11 +27,11 @@ function makeGrpcRequest(JWT_AUTH_TOKEN, API_KEY, HOST, GREETEE) {
   const path = require('path');
 
   // Load protobuf spec for an example API
-  const PROTO_PATH = path.join(__dirname, '/protos/helloworld.proto');
-  const protoObj = grpc.load(PROTO_PATH).helloworld;
+  const PROTO_PATH = path.join(__dirname, '/protos/welcome.proto');
+  const protoObj = grpc.load(PROTO_PATH).endpoints.examples.welcome;
 
   // Create a client for the protobuf spec
-  const client = new protoObj.Greeter(HOST, grpc.credentials.createInsecure());
+  const client = new protoObj.Welcome(HOST, grpc.credentials.createInsecure());
 
   // Build gRPC request
   const metadata = new grpc.Metadata();
@@ -42,7 +42,7 @@ function makeGrpcRequest(JWT_AUTH_TOKEN, API_KEY, HOST, GREETEE) {
   }
 
   // Execute gRPC request
-  client.sayHello({name: GREETEE}, metadata, (err, response) => {
+  client.GetWelcome({ name: GREETEE }, metadata, (err, response) => {
     if (err) {
       console.error(err);
     }
@@ -54,7 +54,7 @@ function makeGrpcRequest(JWT_AUTH_TOKEN, API_KEY, HOST, GREETEE) {
 }
 
 // The command-line program
-const {argv} = require('yargs')
+const { argv } = require('yargs')
   .usage(
     'Usage: node $0 {-k YOUR_API_KEY>, <-j YOUR_JWT_AUTH_TOKEN} [-h YOUR_ENDPOINTS_HOST] [-g GREETEE_NAME]'
   )

@@ -1,0 +1,21 @@
+
+syntax = "proto3";
+
+package endpoints.examples.welcome;
+
+option java_multiple_files = true;
+option java_outer_classname = "WelcomeProto";
+option java_package = "com.google.endpoints.examples.welcome";
+
+
+service Welcome {
+  rpc GetWelcome(welcomeRequest) returns (welcomeResponse) {}
+}
+
+message welcomeRequest {
+  string name = 1;
+}
+
+message welcomeResponse {
+  string message = 1;
+}

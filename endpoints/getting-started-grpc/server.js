@@ -16,26 +16,26 @@
 'use strict';
 
 const path = require('path');
-const PROTO_PATH = path.join(__dirname, '/protos/helloworld.proto');
-
+const PROTO_PATH = path.join(__dirname, '/protos/welcome.proto');
+console.log('PROTO_PATH', PROTO_PATH)
 const grpc = require('grpc');
-const helloProto = grpc.load(PROTO_PATH).helloworld;
+const helloProto = grpc.load(PROTO_PATH).endpoints.examples.welcome;
 
 // Implement the SayHello RPC method.
 function sayHello(call, callback) {
-  callback(null, {message: `Hello ${call.request.name}`});
+  callback(null, { message: `Hello ${call.request.name}` });
 }
 
 // Start an RPC server to handle Greeter service requests
 function startServer(PORT) {
   const server = new grpc.Server();
-  server.addProtoService(helloProto.Greeter.service, {sayHello: sayHello});
+  server.addProtoService(helloProto.Welcome.service, { GetWelcome: sayHello });
   server.bind(`0.0.0.0:${PORT}`, grpc.ServerCredentials.createInsecure());
   server.start();
 }
 
 // The command-line program
-const {argv} = require('yargs')
+const { argv } = require('yargs')
   .usage('Usage: node $0 [-p PORT]')
   .option('port', {
     alias: 'p',
