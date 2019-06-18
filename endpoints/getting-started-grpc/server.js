@@ -16,11 +16,21 @@
 'use strict';
 
 const path = require('path');
+const protoLoader = require('@grpc/proto-loader');
 const PROTO_PATH = path.join(__dirname, '/protos/welcome.proto');
 console.log('PROTO_PATH', PROTO_PATH)
 const grpc = require('grpc');
-const helloProto = grpc.load(PROTO_PATH).endpoints.examples.welcome;
-
+// const helloProto = grpc.load(PROTO_PATH).endpoints.examples.welcome;
+const packageDefinition = protoLoader.loadSync(
+  PROTO_PATH,
+  {
+    keepCase: true,
+    longs: String,
+    enums: String,
+    defaults: true,
+    oneofs: true
+  });
+const helloProto = grpc.loadPackageDefinition(packageDefinition).endpoints.examples.welcome;
 // Implement the SayHello RPC method.
 function sayHello(call, callback) {
   callback(null, { message: `Hello ${call.request.name}` });
@@ -29,8 +39,8 @@ function sayHello(call, callback) {
 // Start an RPC server to handle Greeter service requests
 function startServer(PORT) {
   const server = new grpc.Server();
-  server.addProtoService(helloProto.Welcome.service, { GetWelcome: sayHello });
-  server.bind(`0.0.0.0:${PORT}`, grpc.ServerCredentials.createInsecure());
+  server.addService(helloProto.Welcome.service, { GetWelcome: sayHello });
+  server.bind(`127.0.0.1:${PORT}`, grpc.ServerCredentials.createInsecure());
   server.start();
 }
 
@@ -40,7 +50,7 @@ const { argv } = require('yargs')
   .option('port', {
     alias: 'p',
     type: 'number',
-    default: 50051,
+    default: 8000,
     global: true,
   })
   .wrap(120)

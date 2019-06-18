@@ -11,5 +11,5 @@ WORKDIR /app
 RUN npm install
 ENTRYPOINT []
 
-EXPOSE 50051
+EXPOSE 8000
 CMD ["npm", "start"]
