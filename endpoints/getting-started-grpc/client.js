@@ -26,8 +26,10 @@ function makeGrpcRequest(JWT_AUTH_TOKEN, API_KEY, HOST, GREETEE) {
   const grpc = require('grpc');
   const path = require('path');
   const protoLoader = require('@grpc/proto-loader');
+
   // Load protobuf spec for an example API
-  const PROTO_PATH = path.join(__dirname, '/protos/welcome.proto');
+  const PROTO_PATH = path.join(__dirname, '/protos/http_welcome.proto');
+
   const packageDefinition = protoLoader.loadSync(
     PROTO_PATH,
     {
@@ -39,6 +41,7 @@ function makeGrpcRequest(JWT_AUTH_TOKEN, API_KEY, HOST, GREETEE) {
     });
   const protoObj = grpc.loadPackageDefinition(packageDefinition).endpoints.examples.welcome;
 
+  // const protoObj = grpc.load(PROTO_PATH).endpoints.examples.welcome;
   // Create a client for the protobuf spec
   const client = new protoObj.Welcome(HOST, grpc.credentials.createInsecure());
 

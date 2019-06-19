@@ -17,7 +17,7 @@
 
 const path = require('path');
 const protoLoader = require('@grpc/proto-loader');
-const PROTO_PATH = path.join(__dirname, '/protos/welcome.proto');
+const PROTO_PATH = path.join(__dirname, '/protos/http_welcome.proto');
 console.log('PROTO_PATH', PROTO_PATH)
 const grpc = require('grpc');
 // const helloProto = grpc.load(PROTO_PATH).endpoints.examples.welcome;
@@ -40,7 +40,7 @@ function sayHello(call, callback) {
 function startServer(PORT) {
   const server = new grpc.Server();
   server.addService(helloProto.Welcome.service, { GetWelcome: sayHello });
-  server.bind(`127.0.0.1:${PORT}`, grpc.ServerCredentials.createInsecure());
+  server.bind(`0.0.0.0:${PORT}`, grpc.ServerCredentials.createInsecure());
   server.start();
 }
 
@@ -50,7 +50,7 @@ const { argv } = require('yargs')
   .option('port', {
     alias: 'p',
     type: 'number',
-    default: 8000,
+    default: 50051,
     global: true,
   })
   .wrap(120)
